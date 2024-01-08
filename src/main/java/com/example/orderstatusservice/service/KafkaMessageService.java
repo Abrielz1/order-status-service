@@ -13,4 +13,11 @@ public class KafkaMessageService {
     public void add(KafkaMessage message) {
         messages.add(message);
     }
+
+    public void doSomethingWithMessage(KafkaMessage message) {
+        //todo сделать тело
+    }
+
+    public void send(KafkaMessage someMessageToAnotherTopic) {
+    }
 }

@@ -5,4 +5,4 @@
 app:
   kafka:
     kafkaMessageTopic: "message-topic_1"
-    kafkaMessageGroupId: "kafka-message-group-id"
+    kafkaMessageGroupId: "kafka-message-group-id-2"

@@ -30,6 +30,14 @@ public class KafkaMessageListener {
         log.info("Received message: {}", message);
         log.info("Key: {}; Partition: {}; Topic: {}; Timestamp: {}", key, partition, topic, timeStamp);
 
-        kafkaMessageService.add(message);
+    //    kafkaMessageService.add(message);
+
+        kafkaMessageService.doSomethingWithMessage(message);
+    }
+
+    public void doSomethingWithMessage(KafkaMessage message){
+
+        kafkaMessageService.send(new KafkaMessage());
+
     }
 }
