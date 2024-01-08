@@ -5,6 +5,7 @@ import com.example.orderstatusservice.service.KafkaMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -17,6 +18,8 @@ import java.util.UUID;
 public class KafkaMessageListener {
 
     private final KafkaMessageService kafkaMessageService;
+
+    private KafkaTemplate<String, KafkaMessage> kafkaTemplate;
 
     @KafkaListener(topics = "${app.kafka.kafkaMessageTopic",
                    groupId = "${app.kafka.kafkaMessageGroupId",
@@ -35,9 +38,8 @@ public class KafkaMessageListener {
         kafkaMessageService.doSomethingWithMessage(message);
     }
 
-    public void doSomethingWithMessage(KafkaMessage message){
+    public void doSomethingWithMessage(String topicName, KafkaMessage message){
 
-        kafkaMessageService.send(new KafkaMessage());
-
+        kafkaTemplate.send(topicName, message);
     }
 }
