@@ -21,7 +21,7 @@ public class KafkaMessageListener {
 
     private KafkaTemplate<String, KafkaMessage> kafkaTemplate;
 
-    @KafkaListener(topics = "${app.kafka.kafkaMessageTopic",
+    @KafkaListener(topics = "message-topic",
                    groupId = "${app.kafka.kafkaMessageGroupId",
                    containerFactory =  "kafkaMessageConcurrentKafkaListenerContainerFactory")
     public void listen(@Payload KafkaMessage message,
