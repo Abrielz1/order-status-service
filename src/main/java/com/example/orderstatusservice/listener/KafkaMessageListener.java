@@ -19,10 +19,10 @@ public class KafkaMessageListener {
 
     private final KafkaMessageService kafkaMessageService;
 
-    private KafkaTemplate<String, KafkaMessage> kafkaTemplate;
+    private final KafkaTemplate<String, KafkaMessage> kafkaTemplate;
 
-    @KafkaListener(topics = "topicName1",
-                   groupId = "groupName",
+    @KafkaListener(topics = "${app.kafka.kafkaMessageTopic}",
+                   groupId = "${app.kafka.kafkaMessageGroupId}",
                    containerFactory = "kafkaMessageConcurrentKafkaListenerContainerFactory")
     public void listen(@Payload KafkaMessage message,
                        @Header(value = KafkaHeaders.RECEIVED_KEY, required = false) UUID key,
@@ -33,9 +33,9 @@ public class KafkaMessageListener {
         log.info("Received message: {}", message);
         log.info("Key: {}; Partition: {}; Topic: {}; Timestamp: {}", key, partition, topic, timeStamp);
 
-    //    kafkaMessageService.add(message);
-
+        kafkaMessageService.add(message);
         kafkaMessageService.doSomethingWithMessage(message);
+        doSomethingWithMessage(topic, message);
     }
 
     public void doSomethingWithMessage(String topicName, KafkaMessage message){
