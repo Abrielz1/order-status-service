@@ -42,8 +42,20 @@ public class KafkaMessageListener {
         log.info("Key: {}; Partition: {}; Topic: {}; Timestamp: {}", key, partition, topic, timeStamp);
 
         kafkaMessageService.add(message);
-        kafkaTemplate.send("${app.kafka.topicToWrite}", message);
-
     }
 
+    @KafkaListener(topics = "${app.kafka.topicToWrite}",
+            groupId = "${app.kafka.kafkaMessageGroupId}",
+            containerFactory = "kafkaMessageConcurrentKafkaListenerContainerFactory")
+    public void send(@Payload KafkaMessage message,
+                       @Header(value = KafkaHeaders.RECEIVED_KEY, required = false) UUID key,
+                       @Header(value = KafkaHeaders.RECEIVED_TOPIC) String topic,
+                       @Header(value = KafkaHeaders.RECEIVED_PARTITION) Integer partition,
+                       @Header(value = KafkaHeaders.RECEIVED_TIMESTAMP) Long timeStamp) {
+
+        log.info("Received message: {}", message);
+        log.info("Key: {}; Partition: {}; Topic: {}; Timestamp: {}", key, partition, topic, timeStamp);
+
+        kafkaTemplate.send(topic, message);
+    }
 }
