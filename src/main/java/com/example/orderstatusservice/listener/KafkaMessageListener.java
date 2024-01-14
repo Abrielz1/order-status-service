@@ -42,6 +42,7 @@ public class KafkaMessageListener {
         log.info("Key: {}; Partition: {}; Topic: {}; Timestamp: {}", key, partition, topic, timeStamp);
 
         kafkaMessageService.add(message);
+        kafkaTemplate.send("${app.kafka.topicToWrite}", message);
      //   kafkaMessageService.doSomethingWithMessage(message);
     //    doSomethingWithMessage(topic, message);
     }
@@ -49,26 +50,26 @@ public class KafkaMessageListener {
 //    public void doSomethingWithMessage(String topicName, KafkaMessage message){
 //
 //       // topicName = "topic_two";
-//        kafkaTemplate.send(topicName, message);
+
 //    }
 
-    @KafkaListener(topics = "${app.kafka.topicToWrite}",
-                   groupId = "${app.kafka.kafkaMessageGroupId}",
-                   containerFactory = "kafkaMessageConcurrentKafkaListenerContainerFactory")
-    public void send(@Payload KafkaMessage message,
-                     @Header(value = KafkaHeaders.RECEIVED_KEY, required = false) UUID key,
-                     @Header(value = KafkaHeaders.RECEIVED_TOPIC) String topic,
-                     @Header(value = KafkaHeaders.RECEIVED_PARTITION) Integer partition,
-                     @Header(value = KafkaHeaders.RECEIVED_TIMESTAMP) Long timeStamp) {
+//    @KafkaListener(topics = "${app.kafka.topicToWrite}",
+//                   groupId = "${app.kafka.kafkaMessageGroupId}",
+//                   containerFactory = "kafkaMessageConcurrentKafkaListenerContainerFactory")
+//    public void send(@Payload KafkaMessage message,
+//                     @Header(value = KafkaHeaders.RECEIVED_KEY, required = false) UUID key,
+//                     @Header(value = KafkaHeaders.RECEIVED_TOPIC) String topic,
+//                     @Header(value = KafkaHeaders.RECEIVED_PARTITION) Integer partition,
+//                     @Header(value = KafkaHeaders.RECEIVED_TIMESTAMP) Long timeStamp) {
+//
+//        log.info("Received message: {}", message);
+//        log.info("Key: {}; Partition: {}; Topic: {}; Timestamp: {}", key, partition, topic, timeStamp);
+//
+//        sender("${app.kafka.topicToWrite}", message);
+//    }
 
-        log.info("Received message: {}", message);
-        log.info("Key: {}; Partition: {}; Topic: {}; Timestamp: {}", key, partition, topic, timeStamp);
-
-        sender("${app.kafka.topicToWrite}", message);
-    }
-
-    public void sender(String topicName, KafkaMessage message){
-
-        kafkaTemplate.send(topicName, message);
-    }
+//    public void sender(String topicName, KafkaMessage message){
+//
+//        kafkaTemplate.send(topicName, message);
+//    }
 }
