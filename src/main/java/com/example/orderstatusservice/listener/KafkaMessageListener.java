@@ -53,8 +53,8 @@ public class KafkaMessageListener {
 //    }
 
     @KafkaListener(topics = "${app.kafka.topicToWrite}",
-            groupId = "${app.kafka.kafkaMessageGroupId}",
-            containerFactory = "kafkaMessageConcurrentKafkaListenerContainerFactory")
+                   groupId = "${app.kafka.kafkaMessageGroupId}",
+                   containerFactory = "kafkaMessageConcurrentKafkaListenerContainerFactory")
     public void send(@Payload KafkaMessage message,
                      @Header(value = KafkaHeaders.RECEIVED_KEY, required = false) UUID key,
                      @Header(value = KafkaHeaders.RECEIVED_TOPIC) String topic,
@@ -64,10 +64,10 @@ public class KafkaMessageListener {
         log.info("Received message: {}", message);
         log.info("Key: {}; Partition: {}; Topic: {}; Timestamp: {}", key, partition, topic, timeStamp);
 
-        doSomethingWithMessage(topic, message);
+        sender("${app.kafka.topicToWrite}", message);
     }
 
-    public void doSomethingWithMessage(String topicName, KafkaMessage message){
+    public void sender(String topicName, KafkaMessage message){
 
         kafkaTemplate.send(topicName, message);
     }
