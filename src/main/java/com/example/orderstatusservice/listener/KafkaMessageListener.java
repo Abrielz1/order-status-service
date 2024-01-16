@@ -25,6 +25,8 @@ import org.apache.kafka.common.serialization.StringSerializer;
 @RequiredArgsConstructor
 public class KafkaMessageListener {
 
+    //todo: выкинуть логику в сервис
+
     private final KafkaMessageService kafkaMessageService;
 
     private final KafkaTemplate<String, KafkaMessage> kafkaTemplate;
