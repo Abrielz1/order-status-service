@@ -41,7 +41,8 @@ public class KafkaMessageListener {
         log.info("Received message: {}", message);
         log.info("Key: {}; Partition: {}; Topic: {}; Timestamp: {}", key, partition, topic, timeStamp);
 
-        kafkaMessageService.add(message);
+        kafkaTemplate.send(topic, message);
+       // kafkaMessageService.add(message);
     }
 
     @KafkaListener(topics = "${app.kafka.topicToWrite}",
