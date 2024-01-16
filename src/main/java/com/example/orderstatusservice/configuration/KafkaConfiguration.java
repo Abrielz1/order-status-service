@@ -43,7 +43,7 @@ public class KafkaConfiguration {
 
     @Bean
     public KafkaTemplate<String, KafkaMessage> kafkaTemplate(ProducerFactory<String, KafkaMessage>
-                                                                         kafkaMessageProducerFactory) {
+                                                                     kafkaMessageProducerFactory) {
 
         return new KafkaTemplate<>(kafkaMessageProducerFactory);
     }
