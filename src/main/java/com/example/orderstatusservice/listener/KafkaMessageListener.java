@@ -39,7 +39,7 @@ public class KafkaMessageListener {
 
      //   kafkaTemplate.send(topic, message);
         kafkaMessageService.add(message);
-        send(new KafkaMessageDTO("CREATED"), "order-status-service");
+        send(new KafkaMessageDTO("status : CREATED"), "order-status-service");
         System.out.println("messages list has: " + kafkaMessageService.print());
     }
 
