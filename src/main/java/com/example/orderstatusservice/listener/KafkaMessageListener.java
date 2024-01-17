@@ -53,9 +53,9 @@ public class KafkaMessageListener {
                    groupId = "${app.kafka.kafkaMessageGroupId}",
                    containerFactory = "kafkaMessageConcurrentKafkaListenerContainerFactory")
     public void send(@Payload KafkaMessage message,
-                       @Header(value = KafkaHeaders.RECEIVED_TOPIC) String topic,
-                       @Header(value = KafkaHeaders.RECEIVED_PARTITION) Enum status,
-                       @Header(value = KafkaHeaders.RECEIVED_TIMESTAMP) Long timeStamp) {
+                     @Header(value = KafkaHeaders.RECEIVED_TOPIC) String topic,
+                     @Header(value = KafkaHeaders.RECEIVED_PARTITION) Enum status,
+                     @Header(value = KafkaHeaders.RECEIVED_TIMESTAMP) Long timeStamp) {
 
         log.info("Received message: {}", message);
         log.info("Message: {}; Topic: {}; Status: {}; Timestamp: {}", message, topic, status, timeStamp);
