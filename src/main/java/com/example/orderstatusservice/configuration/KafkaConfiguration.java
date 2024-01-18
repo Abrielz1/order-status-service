@@ -1,6 +1,7 @@
 package com.example.orderstatusservice.configuration;
 
 import com.example.orderstatusservice.model.KafkaMessage;
+import com.example.orderstatusservice.model.KafkaMessageDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -42,8 +43,27 @@ public class KafkaConfiguration {
     }
 
     @Bean
+    public ProducerFactory<String, KafkaMessageDTO> kafkaMessageProducerFactoryDto(ObjectMapper objectMapper) {
+
+        Map<String, Object> config = new HashMap<>();
+
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+
+        return new DefaultKafkaProducerFactory<>(config, new StringSerializer(), new JsonSerializer<>(objectMapper));
+    }
+
+    @Bean
     public KafkaTemplate<String, KafkaMessage> kafkaTemplate(ProducerFactory<String, KafkaMessage>
-                                                                         kafkaMessageProducerFactory) {
+                                                                     kafkaMessageProducerFactory) {
+
+        return new KafkaTemplate<>(kafkaMessageProducerFactory);
+    }
+
+    @Bean
+    public KafkaTemplate<String, KafkaMessageDTO> kafkaTemplateDTO(ProducerFactory<String, KafkaMessageDTO>
+                                                                     kafkaMessageProducerFactory) {
 
         return new KafkaTemplate<>(kafkaMessageProducerFactory);
     }
@@ -54,13 +74,16 @@ public class KafkaConfiguration {
         Map<String, Object> config = new HashMap<>();
 
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        config.put(JsonDeserializer.VALUE_DEFAULT_TYPE, KafkaMessage.class.getName());
+        config.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
         config.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaMessageGroupId);
         config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
 
         return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), new JsonDeserializer<>(objectMapper));
     }
+
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, KafkaMessage> kafkaMessageConcurrentKafkaListenerContainerFactory(
